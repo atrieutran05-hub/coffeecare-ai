@@ -22,7 +22,7 @@ if camera_image is not None:
     
     image = Image.open(camera_image).convert("RGB")
     size = (224, 224)
-    image = ImageOps.fit(image, size, Image.Resampling.BILINEAR)
+    image = ImageOps.fit(image, size, Image.Resampling.BICUBIC)
 
     image_array = np.asarray(image)
     normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
