@@ -1,0 +1,3 @@
+0 Rust
+1 Red_Spider_Mite
+2 Healthy
