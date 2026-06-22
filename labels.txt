@@ -1,0 +1,4 @@
+0 Rust
+1 Red_spider_mite
+2 Healthy 
+3 Background
