@@ -48,22 +48,29 @@ if camera_image is not None:
         # 2. Chuyển sang mảng
         image_array = np.asarray(image)
         
-        # 3. Định nghĩa biến (phải làm dòng này trước)
+        # 3. Chuẩn hóa
         normalized_image_array = (image_array.astype(np.float32) / 127.5) - 1
         
-        # 4. Tạo thùng chứa và đổ dữ liệu vào
+        # 4. Tạo thùng chứa
         data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
         data[0] = normalized_image_array
         
-        # 5. Cho AI dự đoán
+        # 5. Dự đoán
         prediction = model.predict(data)
         index = np.argmax(prediction)
         class_name = class_names[index]
         confidence_score = prediction[0][index]
         
         # 6. Hiển thị kết quả
-        st.success(f"Kết quả: {class_name[2:]}") 
+        disease_name = class_name[2:].strip()
+        st.success(f"Kết quả: {disease_name}") 
         st.info(f"Độ tin cậy: {confidence_score * 100:.2f}%")
+        
+        # 7. Xử lý logic bệnh (đảm bảo phần này thụt vào trong if)
+        if disease_name.lower() == "rust":
+            st.warning("Cây có dấu hiệu bệnh gỉ sắt. Cần kiểm tra ngay!")
+        else:
+            st.success("Cây trông có vẻ bình thường.")
     # 5. Đưa ra giải pháp
     if disease_name.lower() == "rust":
         st.error("**Phát hiện: Bệnh Gỉ sắt (Coffee Leaf Rust)**")
