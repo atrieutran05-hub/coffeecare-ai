@@ -4,8 +4,8 @@ from PIL import Image, ImageOps
 import numpy as np
 
 st.set_page_config(page_title="CoffeeCare AI", layout="centered")
-st.title("☕ CoffeeCare AI - Chuyên gia Cà phê Đắk Lắk")
-st.write("Sử dụng camera điện thoại hoặc tải ảnh lên để nhận diện bệnh trên cây cà phê.")
+st.title("☕ CoffeeCare AI - Chuyên gia Cà phê Phú Yên")
+st.write("Bật camera chụp trực tiếp lá cà phê để quét và nhận diện bệnh ngay lập tức.")
 
 @st.cache_resource
 def load_ai_model():
@@ -16,10 +16,9 @@ def load_ai_model():
 
 model, class_names = load_ai_model()
 
-camera_image = st.file_uploader("Chọn ảnh lá cà phê cần kiểm tra", type=["jpg", "jpeg", "png"])
+camera_image = st.camera_input("Hãy đưa lá cà phê vào chính giữa khung hình và bấm chụp")
 
 if camera_image is not None:
-    st.image(camera_image, caption="Ảnh đã tải lên", use_container_width=True)
     
     image = Image.open(camera_image).convert("RGB")
     size = (224, 224)
@@ -31,7 +30,7 @@ if camera_image is not None:
     data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
     data[0] = normalized_image_array
 
-    with st.spinner("AI đang phân tích bức ảnh..."):
+    with st.spinner("AI đang phân tích bức ảnh ní vừa chụp..."):
         prediction = model.predict(data)
         index = np.argmax(prediction)
         
@@ -54,15 +53,15 @@ if camera_image is not None:
     elif "healthy" in disease_name:
         st.success("✅ **Kết quả: Lá cà phê Khỏe Mạnh**")
         st.markdown("- **Đánh giá:** Cây đang ở trạng thái tốt, không phát hiện dấu hiệu sâu bệnh nguy hiểm.")
-        st.markdown("- **Khuyên nghị:** Tiếp tục duy trì chế độ bón phân và tưới nước định kỳ.")
+        st.markdown("- **Khuyến nghị:** Tiếp tục duy trì chế độ bón phân và tưới nước định kỳ.")
 
     elif "background" in disease_name:
         st.info("🤖 **Hệ thống: Chưa phát hiện rõ lá cà phê**")
         st.markdown("- **Lý do:** Bạn đang chụp cảnh vật, mặt người, đồ vật linh tinh hoặc góc chụp quá xa.")
-        st.markdown("- **Khuyên nghị:** Hãy đưa camera **lại gần hơn**, chụp rõ nét bề mặt của duy nhất một chiếc lá cà phê cần kiểm tra.")
+        st.markdown("- **Khuyến nghị:** Hãy đưa camera **lại gần hơn**, chụp rõ nét bề mặt của duy nhất một chiếc lá cà phê cần kiểm tra.")
     
     else:
         st.write(f"Kết quả phân tích: **{raw_class_name}**")
 
 else:
-    st.write("👋 Đang đợi bạn tải ảnh lên để bắt đầu đó!")
+    st.write("👋 Đang đợi ní bấm nút chụp ảnh trên màn hình để bắt đầu phân tích đó!")
