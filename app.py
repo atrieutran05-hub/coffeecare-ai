@@ -23,6 +23,22 @@ model, class_names = load_ai_model()
 #camera_image = st.camera_input("📸 Hướng camera vào lá hoặc cành cà phê cần kiểm tra:")
 camera_image = st.file_uploader("Chọn ảnh", type=["jpg", "png"])
 
+# 1. Tạo một mảng trống đúng định dạng của Teachable Machine
+data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
+
+# 2. Đưa ảnh đã chuẩn hóa vào mảng
+data[0] = normalized_image_array
+
+# 3. Cho AI dự đoán
+prediction = model.predict(data)
+index = np.argmax(prediction)
+class_name = class_names[index]
+confidence_score = prediction[0][index]
+
+# 4. Hiển thị kết quả chi tiết
+st.success(f"Kết quả: {class_name[2:]}") # [2:] để cắt bỏ số thứ tự trong file labels
+st.info(f"Độ tin cậy (Confidence): {confidence_score * 100:.2f}%")
+
 if camera_image is not None:
     # 3. Tiền xử lý ảnh (Resize về 224x224 chuẩn của Teachable Machine)
     image = Image.open(camera_image).convert("RGB")
